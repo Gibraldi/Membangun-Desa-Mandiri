@@ -31,4 +31,9 @@ class MdmModel extends Model
     {
         return $this->find($id);
     }
+
+    public function search($keyword)
+    {
+        return $this->table('mdm')->like('cabang_pengelola', $keyword)->findAll();
+    }
 }

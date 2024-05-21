@@ -5,11 +5,17 @@
 <div class="container">
   <div class="row">
     <div class="col">
+      <form action="/table" method="get">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Search by Kelurahan/Desa" name="keyword" value="<?= $keyword ?? '' ?>">
+          <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+      </form>
       <div class="table-responsive">
-        <table class="table caption-top table-bordered">
-          <thead>
+        <table class="table table-striped table-bordered table-hover caption-top">
+          <thead class="thead-dark">
             <tr>
-              <th scope="col">Aksi</th>
+              <th scope="col">Konfigurasi</th>  
               <th scope="col">Cabang Pengelola</th>
               <th scope="col">Kota/Kabupaten</th>
               <th scope="col">Kecamatan</th>
@@ -32,12 +38,12 @@
             <?php foreach ($cabang as $m) : ?>
               <tr>
                 <td>
-                  <?php if (in_groups(['maker', 'admin' , 'approver'])) : ?>
+                  <?php if (in_groups('maker') || in_groups('admin')) : ?>
                     <div class="d-flex align-items-center">
                       <a href="/pages/edit/<?= $m['id']; ?>" class="btn btn-warning btn-sm rounded-pill me-1">Edit</a>
                     </div>
                   <?php endif; ?>
-                  <?php if (in_groups(['approver', 'admin'])) : ?>
+                  <?php if (in_groups('approver') || in_groups('admin')) : ?>
                     <div class="d-flex align-items-center">
                       <form action="/pages/delete/<?= $m['id']; ?>" method="post" class="d-inline">
                         <?= csrf_field(); ?>
@@ -68,7 +74,7 @@
           </tbody>
         </table>
       </div>
-      <?php if (in_groups(['admin'])) : ?>
+      <?php if (in_groups('maker') || in_groups('admin')) : ?>
         <caption>
           <a href="/pages/create" class="btn btn-primary" style="margin: 10px;">Tambah Data</a>
         </caption>

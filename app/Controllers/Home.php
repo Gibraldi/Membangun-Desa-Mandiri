@@ -14,25 +14,45 @@ class Home extends BaseController
 
     public function index()
     {
-     $mdm = $this->mDM->findAll();
-
-     $data = [
-        'pemetaan' => $mdm
-    ];
+        $keyword = $this->request->getVar('keyword');
+        if ($keyword) {
+            $mdm = $this->mDM->search($keyword);
+        } else {
+            $mdm = $this->mDM->findAll();
+        }
+    
+        // Ambil latitude dan longitude dari hasil pencarian pertama jika ada
+        $firstResult = $keyword ? reset($mdm) : null;
+    
+        $data = [
+            'pemetaan' => $mdm,
+            'keyword' => $keyword,
+            'latitude' => $firstResult['latitude'] ?? null,
+            'longitude' => $firstResult['longitude'] ?? null
+        ];
+    
         return view('pages/maps', $data);
     }
+    
+    
 
     public function table()
-{
-    $mdm = $this->mDM->findAll();
-
-    $data = [
-        'cabang' => $mdm
-    ];
-
-    return view('pages/table', $data);
-}
-
+    {
+        $keyword = $this->request->getVar('keyword');
+        if($keyword){
+            $desa = $this->mDM->search($keyword);
+        }else{
+            $desa = $this->mDM->findAll();
+        }
+    
+        $data = [
+            'cabang' => $desa,
+            'keyword' => $keyword
+        ];
+    
+        return view('pages/table', $data);
+    }
+    
 public function create()
 {
     
